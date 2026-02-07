@@ -55,8 +55,8 @@ const ModelSelector = ({ selectedModels = [], onToggle }) => {
               }`}
             >
               <div className="aspect-square w-full bg-zinc-900 overflow-hidden flex items-center justify-center border border-zinc-800">
-                <div className={`transition-all duration-500 ${isActive ? 'scale-110' : 'opacity-40 grayscale group-hover:grayscale-0'}`}>
-                   <Shirt size={48} className={isActive ? 'text-yellow-400' : 'text-zinc-700'} />
+                <div className={`transition-all duration-500 ${isActive ? 'scale-110' : 'scale-100'  }`}>
+                  <img src={m.img} alt="" />
                 </div>
               </div>
               <div className="w-full text-center space-y-1">
