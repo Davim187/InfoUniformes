@@ -35,7 +35,7 @@ const ModelSelector = ({ selected, onSelect }) => {
               selected === m.label ? 'border-yellow-400 bg-yellow-400/10' : 'border-zinc-800 bg-black'
             }`}
           >
-            <div className="aspect-square bg-zinc-900 mb-2 overflow-hidden h-35">
+            <div className="aspect-square bg-zinc-900 mb-2 overflow-hidden">
               
               <div className="w-full h-full flex items-center justify-center text-[10px] font-mono text-zinc-600 group-hover:text-yellow-400 transition-colors">
                 <img src={m.img} alt="" />
