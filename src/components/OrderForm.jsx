@@ -9,43 +9,70 @@ import {
   Cpu,
   ChevronDown,
   ChevronUp,
-  Info
+  Info,
+  Check
 } from "lucide-react";
 import { useState } from "react";
 
 
-const ModelSelector = ({ selected, onSelect }) => {
+const ModelSelector = ({ selectedModels = [], onToggle }) => {
+  
   const modelos = [
-    { id: 'm1', label: 'Águia Black', img: 'src/assets/WhatsApp Image 2026-02-06 at 21.40.05 (1).jpeg', desc: 'Preta com Águia Dourada' },
-    { id: 'm4', label: 'Águia White', img: 'src/assets/WhatsApp Image 2026-02-06 at 21.40.05 (2).jpeg', desc: 'Branca com Águia Dourada' },
-    { id: 'm2', label: 'Infor Graffiti White', img: 'src/assets/WhatsApp Image 2026-02-06 at 21.40.05.jpeg', desc: 'Preta Estilo Graffiti' },
-    { id: 'm5', label: 'Infor Graffiti Black', img: 'src/assets/WhatsApp Image 2026-02-06 at 21.40.04 (1).jpeg', desc: 'Branca com Águia Dourada' }
+    { id: 'm1', label: 'Águia Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(1).jpeg?raw=true', desc: 'Preta com Águia Dourada' },
+    { id: 'm4', label: 'Águia White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(2).jpeg?raw=true', desc: 'Branca com Águia Dourada' },
+    { id: 'm2', label: 'Infor Graffiti White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05.jpeg?raw=true', desc: 'Preta Estilo Graffiti' },
+    { id: 'm5', label: 'Infor Graffiti Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.04%20(1).jpeg?raw=true', desc: 'Branca com Águia Dourada' }
   ];
+
+  const handleToggle = (label) => {
+    // Verificação defensiva adicional
+    const currentModels = Array.isArray(selectedModels) ? selectedModels : [];
+    
+    if (currentModels.includes(label)) {
+      onToggle(currentModels.filter(m => m !== label));
+    } else {
+      onToggle([...currentModels, label]);
+    }
+  };
 
   return (
     <div className="space-y-4">
-      <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1">Selecione o Modelo</label>
+      <div className="flex justify-between items-end">
+        <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1">Selecione o(s) Modelo(s)</label>
+        <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-tighter">Múltipla Escolha Ativa</span>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {modelos.map((m) => (
-          <button
-            key={m.id}
-            type="button"
-            onClick={() => onSelect(m.label)}
-            className={`border-2 p-2 transition-all group ${
-              selected === m.label ? 'border-yellow-400 bg-yellow-400/10' : 'border-zinc-800 bg-black'
-            }`}
-          >
-            <div className="aspect-square bg-zinc-900 mb-2 overflow-hidden">
-              
-              <div className="w-full h-full flex items-center justify-center text-[10px] font-mono text-zinc-600 group-hover:text-yellow-400 transition-colors">
-                <img src={m.img} alt="" />
+        {modelos.map((m) => {
+          // Garante que selectedModels é tratado como array antes do includes
+          const isActive = Array.isArray(selectedModels) && selectedModels.includes(m.label);
+          return (
+            <button
+              key={m.id}
+              type="button"
+              onClick={() => handleToggle(m.label)}
+              className={`border-2 p-3 transition-all relative group flex flex-col items-center gap-2 ${
+                isActive ? 'border-yellow-400 bg-yellow-400/10' : 'border-zinc-800 bg-black hover:border-zinc-600'
+              }`}
+            >
+              <div className="aspect-square w-full bg-zinc-900 overflow-hidden flex items-center justify-center border border-zinc-800">
+                <div className={`transition-all duration-500 ${isActive ? 'scale-110' : 'opacity-40 grayscale group-hover:grayscale-0'}`}>
+                   <Shirt size={48} className={isActive ? 'text-yellow-400' : 'text-zinc-700'} />
+                </div>
               </div>
-            </div>
-            <div className={`text-[10px] font-black uppercase ${selected === m.label ? 'text-yellow-400' : 'text-zinc-500'}`}>
-              {m.label}
-            </div>
-          </button>
-        ))}
+              <div className="w-full text-center space-y-1">
+                <div className={`text-[10px] font-black uppercase tracking-tight ${isActive ? 'text-yellow-400' : 'text-zinc-500'}`}>
+                  {m.label}
+                </div>
+                <div className="text-[8px] font-mono text-zinc-600 uppercase leading-none">{m.desc}</div>
+              </div>
+              {isActive && (
+                <div className="absolute top-2 right-2 bg-yellow-400 text-black p-0.5 rounded-none animate-in zoom-in duration-200">
+                  <Check size={12} strokeWidth={4} />
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -133,9 +160,9 @@ export const OrderForm = ({ formData, setFormData, onSubmit, submitting, success
 
       <form onSubmit={onSubmit} className="lg:col-span-3 bg-zinc-900 border-2 border-zinc-800 p-8 space-y-8 shadow-2xl">
         <div className="space-y-6">
-          <ModelSelector 
-            selected={formData.modelo} 
-            onSelect={(m) => setFormData({...formData, modelo: m})} 
+            <ModelSelector 
+            selectedModels={formData.modelos} 
+            onToggle={(m) => setFormData({...formData, modelos: m})} 
           />
 
           <div className="space-y-2">
