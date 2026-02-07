@@ -18,8 +18,6 @@ import { OrderForm } from './components/OrderForm';
 import { SpreadsheetView } from './components/SpreadsheetView';
 import { AdminLoginGate } from './components/AdminLoginGate';
 
-
-
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState(null);
@@ -33,14 +31,13 @@ export default function App() {
   const [formData, setFormData] = useState({
     nome: '',
     telefone: '',
-    tamanho: 'M'
+    tamanho: 'PP'
   });
 
-    useEffect(() => {
+  useEffect(() => {
     signInAnonymously(auth).catch(console.error);
 
     const unsub = onAuthStateChanged(auth, (u) => {
-      console.log(u)
       setUser(u);
       setLoading(false);
     });
@@ -48,7 +45,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!user) return;
 
     const colRef = collection(db, 'uniformes');
@@ -68,7 +65,6 @@ export default function App() {
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
     if (!user || submitting) return;
-
 
     setSubmitting(true);
     try {
@@ -91,9 +87,9 @@ export default function App() {
   if (loading) return <LoadingScreen />;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
-      <div className="fixed inset-0 pointer-events-none opacity-20 no-print">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-yellow-400 selection:text-black overflow-x-hidden">
+      <div className="fixed inset-0 pointer-events-none opacity-10 no-print">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#333_1px,transparent_1px),linear-gradient(to_bottom,#333_1px,transparent_1px)] bg-[size:3rem_3rem]"></div>
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-12">
@@ -101,23 +97,22 @@ export default function App() {
 
         <main>
           {view === 'form' ? (
-            <div className="grid lg:grid-cols-5 gap-12 items-start animate-in fade-in slide-in-from-left-4 duration-700">
-              <InfoSection totalOrders={orders.length} />
-              <OrderForm 
-                formData={formData} 
-                setFormData={setFormData} 
-                onSubmit={handleOrderSubmit}
-                submitting={submitting}
-                success={success}
-              />
-            </div>
+            <OrderForm 
+              formData={formData} 
+              setFormData={setFormData} 
+              onSubmit={handleOrderSubmit}
+              submitting={submitting}
+              success={success}
+              totalOrders={orders.length}
+            />
           ) : (
             isAdmin ? (
               <SpreadsheetView 
                 orders={orders} 
                 activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                userId="admin-session-active"
+                setActiveTab={setActiveTab}
+                userId={user?.uid}
+                onLogout={() => { setIsAdmin(false); setView('form'); }}
               />
             ) : (
               <AdminLoginGate onLoginSuccess={() => setIsAdmin(true)} />
@@ -125,9 +120,9 @@ export default function App() {
           )}
         </main>
 
-        <footer className="mt-20 py-12 border-t border-slate-900 text-center no-print">
-          <p className="text-slate-600 text-[10px] font-mono tracking-[0.2em] uppercase">
-            Desenvolvido por Davi Morais // {new Date().getFullYear()} // v1.0.0
+        <footer className="mt-20 py-12 border-t-2 border-zinc-900 text-center no-print">
+          <p className="text-zinc-700 text-[10px] font-mono tracking-[0.4em] uppercase">
+            Developed_by Davi Morais // 2026 // v2.0.0
           </p>
         </footer>
       </div>
