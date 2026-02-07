@@ -18,10 +18,10 @@ import { useState } from "react";
 const ModelSelector = ({ selectedModels = [], onToggle }) => {
   
   const modelos = [
-    { id: 'm1', label: 'Águia Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(1).jpeg?raw=true', desc: 'Preta com Águia Dourada' },
-    { id: 'm4', label: 'Águia White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(2).jpeg?raw=true', desc: 'Branca com Águia Dourada' },
-    { id: 'm2', label: 'Infor Graffiti White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05.jpeg?raw=true', desc: 'Preta Estilo Graffiti' },
-    { id: 'm5', label: 'Infor Graffiti Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.04%20(1).jpeg?raw=true', desc: 'Branca com Águia Dourada' }
+    { id: 'm1', label: 'Águia Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(1).jpeg?raw=true', },
+    { id: 'm4', label: 'Águia White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05%20(2).jpeg?raw=true', },
+    { id: 'm2', label: 'Infor Graffiti White', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.05.jpeg?raw=true', },
+    { id: 'm5', label: 'Infor Graffiti Black', img: 'https://github.com/Davim187/InfoUniformes/blob/41c2c00911ae40381addd303793411835b2dd32e/src/assets/WhatsApp%20Image%202026-02-06%20at%2021.40.04%20(1).jpeg?raw=true', }
   ];
 
   const handleToggle = (label) => {
