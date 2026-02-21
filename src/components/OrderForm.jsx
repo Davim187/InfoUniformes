@@ -91,15 +91,16 @@ const ModelCard = ({ modelo, onAdd }) => (
 
 // --- COMPONENTE PRINCIPAL DO FORMULÁRIO ---
 
-export const OrderForm = () => {
-  const [formData, setFormData] = useState({
-    nome: "",
-    telefone: "",
-    tamanhoDefault: "M",
-    items: [] // Estrutura: [{ instanceId, id, label, tamanho }]
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+export const OrderForm = ({formData, setFormData, onSubmit, submitting, success, totalOrders}) => {
+  // const [formData, setFormData] = useState({
+  //   nome: "",
+  //   telefone: "",
+  //   tamanhoDefault: "M",
+  //   items: [] // Estrutura: [{ instanceId, id, label, tamanho }]
+  // });
+  // const [submitting, setSubmitting] = useState(false);
+  // const [success, setSuccess] = useState(false);
+  const items = formData?.items || [];
   const [showChart, setShowChart] = useState(false);
 
   // Formatação de Telemóvel
@@ -134,31 +135,19 @@ export const OrderForm = () => {
   const removeItem = (instanceId) => {
     setFormData(prev => ({
       ...prev,
-      items: prev.items.filter(item => item.instanceId !== instanceId)
+     items: (prev.items || []).filter(item => item.instanceId !== instanceId)
     }));
   };
 
   const updateItemSize = (instanceId, newSize) => {
     setFormData(prev => ({
       ...prev,
-      items: prev.items.map(item => 
+      items: (prev.items || []).map(item => 
         item.instanceId === instanceId ? { ...item, tamanho: newSize } : item
       )
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.items.length === 0) return;
-
-    setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
-    
-    console.log("LOG: Ordem de Produção Gerada", formData);
-    setSubmitting(false);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 5000);
-  };
 
   return (
     <div className="grid lg:grid-cols-5 gap-8 items-start">
@@ -192,7 +181,7 @@ export const OrderForm = () => {
       </div>
 
       {/* Formulário Principal */}
-      <form onSubmit={handleSubmit} className="lg:col-span-3 bg-zinc-900 border-2 border-zinc-800 p-5 md:p-10 space-y-10 shadow-2xl overflow-hidden relative">
+      <form onSubmit={onSubmit} className="lg:col-span-3 bg-zinc-900 border-2 border-zinc-800 p-5 md:p-10 space-y-10 shadow-2xl overflow-hidden relative">
         <Shirt className="absolute -top-12 -right-12 text-white opacity-[0.02] pointer-events-none" size={240} />
 
         <div className="space-y-8 relative z-10">
@@ -240,12 +229,22 @@ export const OrderForm = () => {
                     type="tel" 
                     value={formData.telefone}
                     onChange={handlePhoneChange}
-                    className="w-122 bg-black border-2 border-zinc-800 py-4 pl-12 pr-4 focus:border-yellow-400 outline-none text-white font-mono"
+                    className="w-full bg-black border-2 border-zinc-800 py-4 pl-12 pr-4 focus:border-yellow-400 outline-none text-white font-mono"
                     placeholder="(00) 00000-0000"
                   />
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1 text-center block">Tamanho Padrão</label>
+                <select 
+                  value={formData.tamanhoDefault}
+                  onChange={(e) => setFormData(prev => ({ ...prev, tamanhoDefault: e.target.value }))}
+                  className="w-full bg-black border-2 border-zinc-800 py-4 px-4 focus:border-yellow-400 outline-none text-white font-black appearance-none cursor-pointer text-center uppercase"
+                >
+                  {MEDIDAS.map(m => <option key={m.tam} value={m.tam} className="bg-zinc-900">{m.tam}</option>)}
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -255,9 +254,9 @@ export const OrderForm = () => {
           <div className="p-4 bg-black/40 border border-zinc-800 rounded-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 text-zinc-500 font-bold text-[9px] uppercase tracking-widest">
-                <ShoppingBag size={12} /> Resumo da Requisição ({formData.items.length})
+                <ShoppingBag size={12} /> Resumo da Requisição ({items.length })
               </div>
-              {formData.items.length > 0 && (
+              {items.length > 0 && (
                 <button 
                   type="button" 
                   onClick={() => setFormData(prev => ({ ...prev, items: [] }))}
@@ -269,12 +268,12 @@ export const OrderForm = () => {
             </div>
 
             <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-              {formData.items.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="py-8 text-center border border-dashed border-zinc-800 text-zinc-700 text-[10px] uppercase font-bold tracking-tighter">
                   Nenhum modelo selecionado
                 </div>
               ) : (
-                formData.items.map((item, index) => (
+                items.map((item, index) => (
                   <div 
                     key={item.instanceId} 
                     className="flex items-center justify-between bg-zinc-900/50 p-3 border-l-2 border-yellow-400 group animate-in slide-in-from-right-2 duration-300"
@@ -314,7 +313,7 @@ export const OrderForm = () => {
 
           <div className="space-y-4">
             <button 
-              disabled={submitting || formData.items.length === 0}
+              disabled={submitting || items.length === 0}
               className="w-full bg-yellow-400 hover:bg-yellow-300 disabled:opacity-20 disabled:grayscale text-black font-black py-5 shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)] transition-all flex items-center justify-center gap-3 active:translate-y-1 active:shadow-none"
             >
               {submitting ? (
@@ -335,4 +334,5 @@ export const OrderForm = () => {
     </div>
   );
 };
+
 

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   collection, 
   addDoc, 
-  onSnapshot 
+  onSnapshot, 
+  or
 } from 'firebase/firestore';
 import { 
   signInAnonymously, 
@@ -28,11 +29,12 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [formData, setFormData] = useState({
-    nome: '',
-    telefone: '',
-    tamanho: 'PP'
-  });
+const [formData, setFormData] = useState({
+  nome: "",
+  telefone: "",
+  tamanhoDefault: "M",
+  items: []
+});
 
   useEffect(() => {
     signInAnonymously(auth).catch(console.error);
@@ -49,7 +51,6 @@ export default function App() {
     if (!user) return;
 
     const colRef = collection(db, 'uniformes');
-
     const unsub = onSnapshot(colRef, (snap) => {
       setOrders(
         snap.docs.map(doc => ({
@@ -58,16 +59,18 @@ export default function App() {
         }))
       );
     });
+    console.log(colRef);
 
     return () => unsub();
   }, [user]);
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-    if (!user || submitting) return;
+   if (!user || submitting || formData.items.length === 0) return;
 
     setSubmitting(true);
     try {
+      console.log("Salvando pedido:", formData);
       await addDoc(collection(db, 'uniformes'), {
         ...formData,
         createdAt: new Date(),
@@ -75,7 +78,12 @@ export default function App() {
       });
 
       setSuccess(true);
-      setFormData({ nome: '', telefone: '', tamanho: 'M' });
+      setFormData({
+  nome: '',
+  telefone: '',
+  tamanhoDefault: 'M',
+  items: []
+});
       setTimeout(() => setSuccess(false), 4000);
     } catch (err) {
       console.error("Erro ao salvar:", err);
@@ -107,13 +115,10 @@ export default function App() {
             />
           ) : (
             isAdmin ? (
-              <SpreadsheetView 
-                orders={orders} 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab}
-                userId={user?.uid}
-                onLogout={() => { setIsAdmin(false); setView('form'); }}
-              />
+               <SpreadsheetView 
+              orders={orders} 
+              onLogout={() => { setIsAdmin(false); setView('form'); }} 
+            />
             ) : (
               <AdminLoginGate onLoginSuccess={() => setIsAdmin(true)} />
             )
