@@ -66,10 +66,10 @@ const SizeChart = () => (
   </div>
 );
 
-const ModelCard = ({ modelo, onAdd }) => (
+const ModelCard = ({ modelo, onAdd,selected }) => (
   <div 
     onClick={() => onAdd(modelo)}
-    className="flex flex-col border-2 border-zinc-800 bg-black transition-all duration-300 hover:border-yellow-400 group cursor-pointer active:scale-95"
+ className={`flex flex-col border-2 ${selected ? "border-yellow-400" : "border-zinc-800"} bg-black transition-all duration-300 hover:border-yellow-400 group cursor-pointer active:scale-95`}
   >
     <div className="p-3 flex flex-col items-center gap-3">
       <div className="aspect-square w-full bg-zinc-900 overflow-hidden border border-zinc-800 relative">
@@ -102,6 +102,8 @@ export const OrderForm = ({formData, setFormData, onSubmit, submitting, success,
   // const [success, setSuccess] = useState(false);
   const items = formData?.items || [];
   const [showChart, setShowChart] = useState(false);
+  const selectedModelIds = new Set(items.map(item => item.id));
+
 
   // Formatação de Telemóvel
   const handlePhoneChange = (e) => {
@@ -197,6 +199,7 @@ export const OrderForm = ({formData, setFormData, onSubmit, submitting, success,
                   key={m.id}
                   modelo={m}
                   onAdd={addItem}
+                  selected={selectedModelIds.has(m.id)}
                 />
               ))}
             </div>
