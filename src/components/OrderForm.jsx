@@ -224,7 +224,7 @@ export const OrderForm = ({formData, setFormData, onSubmit, submitting, success,
 
             <div className="grid sm:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1">Contacto</label>
+                <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1">Contato</label>
                 <div className="relative">
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-700" size={18} />
                   <input 
@@ -232,21 +232,10 @@ export const OrderForm = ({formData, setFormData, onSubmit, submitting, success,
                     type="tel" 
                     value={formData.telefone}
                     onChange={handlePhoneChange}
-                    className="w-full bg-black border-2 border-zinc-800 py-4 pl-12 pr-4 focus:border-yellow-400 outline-none text-white font-mono"
+                    className="w-122 bg-black border-2 border-zinc-800 py-4 pl-12 pr-4 focus:border-yellow-400 outline-none text-white font-mono"
                     placeholder="(00) 00000-0000"
                   />
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-yellow-400 uppercase tracking-widest ml-1 text-center block">Tamanho Padrão</label>
-                <select 
-                  value={formData.tamanhoDefault}
-                  onChange={(e) => setFormData(prev => ({ ...prev, tamanhoDefault: e.target.value }))}
-                  className="w-full bg-black border-2 border-zinc-800 py-4 px-4 focus:border-yellow-400 outline-none text-white font-black appearance-none cursor-pointer text-center uppercase"
-                >
-                  {MEDIDAS.map(m => <option key={m.tam} value={m.tam} className="bg-zinc-900">{m.tam}</option>)}
-                </select>
               </div>
             </div>
           </div>
